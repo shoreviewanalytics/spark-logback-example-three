@@ -5,7 +5,8 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 
-import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 
 import org.apache.hadoop.conf.Configuration;
@@ -35,57 +36,60 @@ public class SparkLogBackExampleThree {
 		
 		final Pattern SPACE = Pattern.compile(" ");
 
-		SparkConf conf = new SparkConf()
-				.setAppName("SparkLogBackExampleThree");
-
-		 
+		SparkConf conf = new SparkConf().setAppName("SparkLogBackExampleThree");
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		SparkSession spark = SparkSession.builder().appName("SparkLogBackExampleThree").getOrCreate();
 		
-		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-		
-		Configuration hdfsconf = new Configuration();
-		
-		
-		/*
-		 * configuration.set("fs.dsefs.impl", "com.datastax.bdp.fs.hadoop.DseFileSystem")
-		 * val dsefs = FileSystem.get(new URI("dsefs://localhost:5598/"), configuration)
-		 * 
-		 * conf.set(key, "hdfs://host:port");
-
-		 */
-		
-		
+				
 		try {
 			
-			hdfsconf.set("fs.defaultFS", "dsefs://10.1.10.51:5598");  // where key="fs.default.name"|"fs.defaultFS" 
+			LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 			
-			FileSystem fileSystem = FileSystem.get(hdfsconf);
-			
-			String file = "/jobs/sle3/logback.xml";
-
-		    Path path = new Path(file);
-		    if (!fileSystem.exists(path)) {
-		      System.out.println("File " + file + " does not exists");
-		      return;
-		    }
-
-		    FSDataInputStream logbackPropertiesUserFile = fileSystem.open(path);
-			
-		    						
+			Configuration hdfsconf = new Configuration();
+			hdfsconf.set("fs.dsefs.impl", "com.datastax.bdp.fs.hadoop.DseFileSystem");
+			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.username", "cassandra");
+			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.password", "");
+		    
+					
+			FileSystem fileSystem;
 			try {
+				fileSystem = FileSystem.get(new URI("dsefs://10.1.10.51:5598/"),hdfsconf);
 				
-			      JoranConfigurator configurator = new JoranConfigurator();
-			      configurator.setContext(context);
-			      context.reset(); 
-			      configurator.doConfigure(logbackPropertiesUserFile);
-			    } catch (JoranException je) {
-			      // StatusPrinter will handle this
+				String file = "jobs/sle3/logback.xml";
+
+			    Path path = new Path(file);
+			    if (!fileSystem.exists(path)) {
+			      logger.info("File " + file + " does not exist.");
+			      return;
 			    }
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		
+
+			    FSDataInputStream logbackPropertiesUserFile = fileSystem.open(path);	
+			    
+			    try {
+					
+				      JoranConfigurator configurator = new JoranConfigurator();
+				      configurator.setContext(context);
+				      context.reset(); 
+				      configurator.doConfigure(logbackPropertiesUserFile);
+				    } catch (JoranException je) {
+				      // StatusPrinter below will handle this
+				    }
+				
+					StatusPrinter.printInCaseOfErrorsOrWarnings(context);
+			} catch (URISyntaxException e) {
+				
+				e.printStackTrace();
+			}
+			
+				
+		    						
+			
+				
+		}catch(Exception e){
+			
+			logger.error("An Error has occurred: " + e.getMessage());		
+			 
+			
 		}
 		
 	    
@@ -93,7 +97,7 @@ public class SparkLogBackExampleThree {
 	
 	    
 	    
-	    StatusPrinter.printInCaseOfErrorsOrWarnings(context);
+	    
 		
 		
 		SysStreamsLogger.bindSystemStreams();
