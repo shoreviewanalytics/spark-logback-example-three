@@ -72,7 +72,7 @@ public class SparkLogBackExampleThree {
 				      context.reset(); 
 				      configurator.doConfigure(logbackPropertiesUserFile);
 				    } catch (JoranException je) {
-				      // StatusPrinter below will handle this
+				      
 				    }
 				
 					StatusPrinter.printInCaseOfErrorsOrWarnings(context);
