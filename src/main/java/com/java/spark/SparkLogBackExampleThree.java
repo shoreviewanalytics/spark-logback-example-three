@@ -55,10 +55,11 @@ public class SparkLogBackExampleThree {
 		 * conf.set(key, "hdfs://host:port");
 
 		 */
-		hdfsconf.set("fs.defaultFS", "webhdfs://10.1.10.51:5598");  // where key="fs.default.name"|"fs.defaultFS"
+		
 		
 		try {
 			
+			hdfsconf.set("fs.defaultFS", "webhdfs:///10.1.10.51:5598");  // where key="fs.default.name"|"fs.defaultFS" 
 			
 			FileSystem fileSystem = FileSystem.get(hdfsconf);
 			
