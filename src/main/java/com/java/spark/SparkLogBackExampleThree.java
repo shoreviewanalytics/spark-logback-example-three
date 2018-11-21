@@ -36,9 +36,8 @@ public class SparkLogBackExampleThree {
 		final Pattern SPACE = Pattern.compile(" ");
 
 		SparkConf conf = new SparkConf()
-				.setAppName("SparkLogBackExampleThree")
-				.set("spark.hadoop.com.datastax.bdp.fs.client.authentication.basic.username", "cassandra")
-				.set("spark.hadoop.com.datastax.bdp.fs.client.authentication.basic.password", "cassandra");
+				.setAppName("SparkLogBackExampleThree");
+
 		 
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		SparkSession spark = SparkSession.builder().appName("SparkLogBackExampleThree").getOrCreate();
@@ -59,7 +58,7 @@ public class SparkLogBackExampleThree {
 		
 		try {
 			
-			hdfsconf.set("fs.defaultFS", "webhdfs://10.1.10.51:5598");  // where key="fs.default.name"|"fs.defaultFS" 
+			hdfsconf.set("fs.defaultFS", "dsefs://10.1.10.51:5598");  // where key="fs.default.name"|"fs.defaultFS" 
 			
 			FileSystem fileSystem = FileSystem.get(hdfsconf);
 			
