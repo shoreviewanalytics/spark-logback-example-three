@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.java.spark</groupId>
+  <artifactId>spark-logback-example-three</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>java</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <dse.version>6.0.4</dse.version>
+  	<connector.version>2.0.7</connector.version>
+  	<cassandra.version>3.2</cassandra.version>
+  </properties>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.datastax.dse</groupId>
+  		<artifactId>dse-spark-dependencies</artifactId>
+  		<version>${dse.version}</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.spark</groupId>
+  		<artifactId>spark-core_2.11</artifactId>
+  		<version>2.1.1</version>  		 
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.cassandra</groupId>
+  		<artifactId>cassandra-all</artifactId>
+  		<version>${cassandra.version}</version>
+  		<scope>test</scope>
+  	</dependency>     
+  </dependencies>
+<repositories>
+    <repository>
+      <id>DataStax-Repo</id>
+      <url>https://repo.datastax.com/public-repos/</url>
+    </repository>
+  </repositories>
+</project>
