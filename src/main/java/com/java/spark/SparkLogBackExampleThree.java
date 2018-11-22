@@ -54,6 +54,8 @@ public class SparkLogBackExampleThree {
 			hdfsconf.set("fs.dsefs.impl", "com.datastax.bdp.fs.hadoop.DseFileSystem");
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.username", "cassandra");
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.password", "");
+			hdfsconf.set("com.datastax.bdp.fs.client.authentication.factory", "com.datastax.bdp.fs.hadoop.DseRestClientAuthProviderBuilderFactory");
+			
 			
 		    FileSystem fileSystem = FileSystem.get(new URI("dsefs://10.1.10.51:5598/jobs/sle3/"),hdfsconf);		    
 			
