@@ -41,7 +41,7 @@ public class SparkLogBackExampleThree {
 
 		SparkConf conf = new SparkConf()
 				.setAppName("SparkLogBackExampleThree");
-				//.setMaster("local[2]");
+				
 		
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		
