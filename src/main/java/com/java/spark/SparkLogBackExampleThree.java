@@ -1,15 +1,11 @@
 package com.java.spark;
 
-import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.SparkSession;
 
+import org.apache.spark.api.java.JavaSparkContext;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -25,10 +21,6 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 
 
-import scala.Tuple2;
-import java.util.regex.Pattern;
-
-@SuppressWarnings("unused")
 public class SparkLogBackExampleThree {
 	
 	final static Logger logger = LoggerFactory.getLogger(SparkLogBackExampleThree.class);
@@ -37,29 +29,32 @@ public class SparkLogBackExampleThree {
 		
 		System.setProperty("jobname","app2");
 		
-		final Pattern SPACE = Pattern.compile(" ");
-
 		SparkConf conf = new SparkConf()
-				.setAppName("SparkLogBackExampleThree");
+				.setAppName("SparkLogBackExampleThree")
+				.setMaster("local[1]") // comment out if not running locally.
+				;
 				
 		
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		
+        
 		
 		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 				
 		try {
 			
 			Configuration hdfsconf = new Configuration();
+			
+			
 			hdfsconf.set("fs.dsefs.impl", "com.datastax.bdp.fs.hadoop.DseFileSystem");
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.username", "cassandra");
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.password", "");
-			hdfsconf.set("com.datastax.bdp.fs.client.authentication.factory", "com.datastax.bdp.fs.hadoop.DseRestClientAuthProviderBuilderFactory");
+			hdfsconf.set("com.datastax.bdp.fs.client.authentication.factory", "com.datastax.bdp.fs.hadoop.RestClientAuthProviderBuilderFactory");
 			
 			
-		    FileSystem fileSystem = FileSystem.get(new URI("dsefs://10.1.10.51:5598/jobs/sle3/"),hdfsconf);		    
+		    FileSystem fileSystem = FileSystem.get(new URI("dsefs://10.1.10.51:5598"),hdfsconf);		    
 			
-			FSDataInputStream inputStream = fileSystem.open(new Path("logback.xml"));
+			FSDataInputStream inputStream = fileSystem.open(new Path("dsefs://10.1.10.51:5598/jobs/sle3/logback.xml"));
 			
 			ObjectInputStream configStream = new ObjectInputStream(inputStream);			
 			
