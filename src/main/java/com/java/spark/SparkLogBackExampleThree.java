@@ -50,8 +50,7 @@ public class SparkLogBackExampleThree {
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.username", "cassandra");
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.password", "");
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.factory", "com.datastax.bdp.fs.hadoop.RestClientAuthProviderBuilderFactory");
-			
-			
+						
 		    FileSystem fileSystem = FileSystem.get(new URI("dsefs://10.1.10.51:5598"),hdfsconf);		    
 			
 			FSDataInputStream inputStream = fileSystem.open(new Path("dsefs://10.1.10.51:5598/jobs/sle3/logback.xml"));
