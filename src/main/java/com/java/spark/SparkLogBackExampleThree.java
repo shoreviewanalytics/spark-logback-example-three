@@ -50,6 +50,7 @@ public class SparkLogBackExampleThree {
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.username", "cassandra");
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.password", "");
 			
+			
 		    //FileSystem fileSystem = FileSystem.get(new URI("dsefs://10.1.10.51:5598"),hdfsconf);	
 			
 			FileSystem fileSystem = FileSystem.get(hdfsconf);
