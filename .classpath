@@ -17,14 +17,14 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/one/sparkcode/spark-logback-example-three/dse-byos_2.11-6.0.4.jar"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/one/sparkcode/spark-logback-example-three/dse-dsefs-client-6.0.4.jar"/>
-	<classpathentry kind="lib" path="/home/one/sparkcode/spark-logback-example-three/dse-dsefs-common-6.0.4.jar"/>
-	<classpathentry kind="lib" path="/home/one/sparkcode/spark-logback-example-three/dse-dsefs-hadoop-6.0.4.jar"/>
-	<classpathentry kind="lib" path="/home/one/sparkcode/spark-logback-example-three/dse-dsefs-server-6.0.4.jar"/>
-	<classpathentry kind="lib" path="/home/one/sparkcode/spark-logback-example-three/dse-dsefs-util-6.0.4.jar"/>
-	<classpathentry kind="lib" path="/home/one/sparkcode/spark-logback-example-three/dse-dsefs-scala-driver-6.0.4.jar"/>
-	<classpathentry kind="lib" path="/home/one/sparkcode/spark-logback-example-three/scala-logging_2.11-3.5.0.jar"/>
-	<classpathentry kind="lib" path="/home/one/sparkcode/spark-logback-example-three/spray-json_2.11-1.3.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

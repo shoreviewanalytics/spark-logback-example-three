@@ -29,7 +29,7 @@
   		<version>${cassandra.version}</version>
   		<scope>test</scope>
   	</dependency>
-  	<dependency>
+  	<!-- <dependency>
     <groupId>org.apache.hadoop</groupId>
     <artifactId>hadoop-hdfs</artifactId>
     <version>2.6.0</version>
@@ -48,7 +48,7 @@
     <groupId>org.apache.hadoop</groupId>
     <artifactId>hadoop-core</artifactId>
     <version>1.2.1</version>
-</dependency>     
+</dependency>      -->
   </dependencies>
 <repositories>
     <repository>
