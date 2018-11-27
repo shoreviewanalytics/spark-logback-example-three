@@ -3,21 +3,16 @@ package com.java.spark;
 
 import org.apache.spark.api.java.JavaSparkContext;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.FsStatus;
-import org.apache.hadoop.fs.Hdfs;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.spark.SparkConf;
-import com.datastax.bdp.fs.hadoop.*;
+import org.apache.spark.SparkContext;
 
 import org.slf4j.LoggerFactory;
 
@@ -32,76 +27,49 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class SparkLogBackExampleThree {
 	
 	final static Logger logger = LoggerFactory.getLogger(SparkLogBackExampleThree.class);
-	private static final String rawData = null;
+	private static boolean isLocal = true;
 	
 	public static void main(String[] args) {
-		
-		System.setProperty("jobname","app2");
-		
-		SparkConf conf = new SparkConf()
-				.setAppName("SparkLogBackExampleThree")
-				.setMaster("local[1]") // comment when not running locally.
-				;
-				
-		
-		JavaSparkContext sc = new JavaSparkContext(conf);
-		
-        
-		
-		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 				
 		try {
 			
+			System.setProperty("jobname", "spark-logback-example-three");
+			if (isLocal == true) {
+				SparkConf conf = new SparkConf().setAppName("SparkLogBackExampleThree").setMaster("local[1]");
+				@SuppressWarnings("resource")
+				JavaSparkContext sc = new JavaSparkContext(conf);
+			} else {
+				
+				SparkConf conf = new SparkConf().setAppName("SparkLogBackExampleThree");
+				@SuppressWarnings("resource")
+				JavaSparkContext sc = new JavaSparkContext(conf);
+			}
+			
+			
+			
+			LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+			
 			Configuration hdfsconf = new Configuration();
 			
-			hdfsconf.set("fs.defaultFS", "dsefs://10.1.10.51");
+			hdfsconf.set("fs.defaultFS", "dsefs://10.1.10.52");
 			hdfsconf.set("fs.dsefs.impl", "com.datastax.bdp.fs.hadoop.DseFileSystem");
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.factory", "com.datastax.bdp.fs.hadoop.DseRestClientAuthProviderBuilderFactory");
 			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.username", "cassandra");
-			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.password", "");		
+			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.password", "");				
 			
+		    FileSystem fileSystem = FileSystem.get(new URI("dsefs://10.1.10.52:5598"),hdfsconf);										
+			boolean exists = fileSystem.exists(new Path("dsefs://10.1.10.52:5598/jobs/sle3/logback.xml"));				
 			
-		    //FileSystem fileSystem = FileSystem.get(new URI("dsefs://10.1.10.51:5598"),hdfsconf);	
-			
-			DseFileSystem fileSystem = (DseFileSystem) DseFileSystem.get(hdfsconf);
-			
-			Path home = fileSystem.getHomeDirectory();  // home dir for user 
-			
-			
-						
-			logger.info(home.toString());
-						
-						
-			boolean exists = fileSystem.exists(new Path("dsefs://10.1.10.51:5598/jobs/sle3/logback.xml"));
-			
-			boolean isfile = fileSystem.isFile(new Path("dsefs://10.1.10.51:5598/jobs/sle3/logback.xml"));
-			
-			
-			// change permission  
-			//fileSystem.setPermission(new Path("file:///jobs/sle3/logback.xml"), new FsPermission((short)0777));
-			
-			// change owner
-			//fileSystem.setOwner(new Path("file:///jobs/sle3/logback.xml"), "one", "one");
-			
+			String filePath = "dsefs://10.1.10.52:5598/jobs/sle3/logback.xml";
+			Path fpath = new Path(filePath);
 					
-			if (exists == true) {
-
-				//FSDataInputStream inputStream = fileSystem.open(new Path("dsefs://10.1.10.51:5598/jobs/sle3/logback.xml"));
-				//InputStream inputStream = fileSystem.open(new Path("dsefs://10.1.10.51:5598/jobs/sle3/logback.xml"));
-				//InputStream inputStream = fileSystem.open(new Path("file:///jobs/sle3/logback.xml"));
+			if (exists == true) {				
 				
-				InputStream inputStream = fileSystem.open(new Path("dsefs://10.1.10.51:5598/jobs/sle3/logback.xml"));
+				fileSystem = fpath.getFileSystem(hdfsconf);
+				
+				FSDataInputStream inputStream = fileSystem.open(fpath);		
 								
-							
-	/*			ObjectInputStream configStream = new ObjectInputStream(inputStream);*/
-				
-				BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-				
-				byte[] bs = new byte[inputStream.available()];
-				 
-				
-				/*try {
-
+				try {
 					JoranConfigurator configurator = new JoranConfigurator();
 					configurator.setContext(context);
 					context.reset();
@@ -110,43 +78,28 @@ public class SparkLogBackExampleThree {
 
 				}
 
-				StatusPrinter.printInCaseOfErrorsOrWarnings(context);*/
-				
-				try {
-				
-					String line;
-					String text;
-					text = br.toString();
-					line = br.readLine();
-					
-					while (line != null) {
-						logger.info(line);
-					   
-						line = br.readLine();
-				    }
-				}	finally {
-						br.close();
-						inputStream.close();
-						fileSystem.close();
-						
-					}
-				
-				
+				StatusPrinter.printInCaseOfErrorsOrWarnings(context);	
 				
 				}
 				
 			
-			
-			// }catch(IOException | URISyntaxException | IllegalArgumentException e){
-		} catch (IOException | IllegalArgumentException e) {
+			    logger.info("job start");
+			    
+			    
+			    logger.info("job end");
+			    
+			    
+	
+		} catch (IOException | IllegalArgumentException | URISyntaxException e) {
 
-			logger.error("An Error has occurred: " + e.getMessage());
+			logger.error("A fatal error has occurred: " + e.getMessage());
 
 		}
-	    	
-		sc.close();
-		 
+	    		
 
 	}
 
 }
+
+
+
