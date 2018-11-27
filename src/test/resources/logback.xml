@@ -1,0 +1,56 @@
+<configuration scan="true">
+
+  <!-- job specific log file, you can place where desired -->
+  <property name="APP_LOG_DIR" value="/home/one/jobs/logs/" />
+  <!-- adding a datePattern to append to the log file -->
+  <timestamp key="datetime" datePattern="yyyy-MM-dd'_'HH-mm-ss.SSS"/>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${APP_LOG_DIR}/${jobname}-${datetime}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${APP_LOG_DIR}/{jobname}.%i.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>20</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>20MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%-5level %date{ISO8601} %F:%L - %msg%n</pattern>
+        </encoder>
+   </appender>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
+
+ <!-- 
+
+      Adjustments to loggers can be made here. The most powerful adjustment is setting org.apache.spark to INFO or DEBUG for development. 
+      If you set this logger to OFF the job will only log where logging is explicitly set.   
+
+-->
+ <logger name="org.apache.hadoop.hive.metastore" level="ERROR"/>
+ <logger name="com.datastax.bdp.hadoop.hive.metastore.CassandraHiveMetaStore" level="ERROR"/>
+ <logger name="com.datastax.driver" level="OFF"/>
+ <logger name="org.apache.hadoop.hive" level="ERROR"/>
+ <logger name="org.eclipse.jetty" level="OFF"/>
+ <logger name="org.apache.hadoop.util.NativeCodeLoader" level="ERROR"/>
+ <logger name="org.apache.spark" level="OFF"/> <!--Warning if you set the level for this logger to DEBUG it will product a massive log file. -->
+ <logger name="com.datastax.dse" level="OFF"/>
+ <logger name="org.apache.cassandra" level="OFF"/>
+ <logger name="org.apache.spark.util.logging.FileAppender" level="INFO"/>
+ <logger name="org.spark_project.jetty" level="OFF"/>
+ <logger name="org.spark_project.jetty.util.component.AbstractLifeCycle" level="ERROR"/>
+ <logger name="org.apache.parquet" level="INFO"/>
+ <logger name="parquet" level="ERROR"/>
+
+ <!-- adjust root as needed, setting level="DEBUG" is everything -->
+ <root level="INFO">
+    <!--use FILE or STDOUT -->
+     <appender-ref ref="FILE" />
+ <!--<appender-ref ref="STDOUT" /> -->
+ </root>
+</configuration>
