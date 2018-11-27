@@ -23,7 +23,7 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class SparkLogBackExampleThree {
 
 	final static Logger logger = LoggerFactory.getLogger(SparkLogBackExampleThree.class);
-	private static boolean isLocal = true;
+	private static boolean isLocal = false;
 
 	public static void main(String[] args) {
 
@@ -43,16 +43,16 @@ public class SparkLogBackExampleThree {
 
 			LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
-			Configuration hdfsconf = new Configuration();
+			Configuration dsefsconf = new Configuration();
 
-			hdfsconf.set("fs.defaultFS", "dsefs://10.1.10.52");
-			hdfsconf.set("fs.dsefs.impl", "com.datastax.bdp.fs.hadoop.DseFileSystem");
-			hdfsconf.set("com.datastax.bdp.fs.client.authentication.factory",
+			dsefsconf.set("fs.defaultFS", "dsefs://10.1.10.52");
+			dsefsconf.set("fs.dsefs.impl", "com.datastax.bdp.fs.hadoop.DseFileSystem");
+			dsefsconf.set("com.datastax.bdp.fs.client.authentication.factory",
 					"com.datastax.bdp.fs.hadoop.DseRestClientAuthProviderBuilderFactory");
-			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.username", "cassandra");
-			hdfsconf.set("com.datastax.bdp.fs.client.authentication.basic.password", "");
+			dsefsconf.set("com.datastax.bdp.fs.client.authentication.basic.username", "cassandra");
+			dsefsconf.set("com.datastax.bdp.fs.client.authentication.basic.password", "");
 
-			FileSystem fileSystem = FileSystem.get(new URI("dsefs://10.1.10.52:5598"), hdfsconf);
+			FileSystem fileSystem = FileSystem.get(new URI("dsefs://10.1.10.52:5598"), dsefsconf);
 			boolean exists = fileSystem.exists(new Path("dsefs://10.1.10.52:5598/jobs/sle3/logback.xml"));
 
 			String filePath = "dsefs://10.1.10.52:5598/jobs/sle3/logback.xml";
@@ -60,7 +60,7 @@ public class SparkLogBackExampleThree {
 
 			if (exists == true) {
 
-				fileSystem = fpath.getFileSystem(hdfsconf);
+				fileSystem = fpath.getFileSystem(dsefsconf);
 
 				FSDataInputStream inputStream = fileSystem.open(fpath);
 
