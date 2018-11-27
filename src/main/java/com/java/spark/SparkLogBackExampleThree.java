@@ -1,7 +1,6 @@
 package com.java.spark;
 
 import org.apache.spark.api.java.JavaSparkContext;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -14,7 +13,6 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 
 import org.slf4j.LoggerFactory;
-
 import org.slf4j.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
